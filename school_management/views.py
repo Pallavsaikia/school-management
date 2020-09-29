@@ -32,3 +32,9 @@ class DashboardView(View):
     @method_decorator(authenticate_staff)
     def get(self, request):
         return render(request, "dashboard.html", {})
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("/")
