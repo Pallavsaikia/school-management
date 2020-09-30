@@ -3,6 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import login, logout
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from helper.authenticate import authenticate_staff
 
@@ -18,12 +19,13 @@ class LoginView(View):
     def post(self, request):
         user = request.POST['username']
         password = request.POST['password']
-        user = auth.authenticate(username=user, password=password, is_staff=True)
+        user = auth.authenticate(username=user, password=password)
         if user is not None and user.is_staff:
             login(request, user)
             return redirect("/dashboard/")
 
         else:
+            messages.error(request,'invalid id or password')
             logout(request)
             return redirect('/')
 

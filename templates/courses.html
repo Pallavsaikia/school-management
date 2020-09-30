@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <!-- left col -->
+                    <div class="col-sm-6">
+
+                        <h1 class="m-0">Courses</h1>
+
+                        <div class="card card-info mt-4">
+                            <div class="card-header">
+                                <h3 class="card-title">Add Courses</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form class="form-horizontal" method="post">
+                                {% csrf_token %}
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Name</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="course_name"
+                                                   placeholder="Course Name">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Abv.</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="abbreviation"
+                                                   placeholder="Abbreviation">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Num Div</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control" id="num_div" name="num_div"
+                                                   placeholder="Maximum number of semester/div/year">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-info">ADD</button>
+                                </div>
+                                <!-- /.card-footer -->
+                            </form>
+                        </div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                    <div class="alert alert-success" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-6">
+
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <script>
+        document.getElementById('num_div').addEventListener('keyup', function restrictNumber(e) {
+            this.value = this.value.replace(new RegExp(/[^\d]/, 'ig'), "");
+        });
+
+    </script>
+{% endblock %}

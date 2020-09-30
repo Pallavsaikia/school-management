@@ -11,16 +11,27 @@ def authenticate_staff(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            try:
-                user = User.objects.get(username=request.user.username)
-                if not user.is_staff and not user.is_superuser:
-                    return redirect('/')
-                else:
-                    return function(request, *args, **kwargs)
-            except User.DoesNotExist:
-                return redirect('/')
-
+            return redirect('/')
         else:
             return function(request, *args, **kwargs)
+
+    return wrap
+
+
+def authenticate_superuser(function):
+    @wraps(function)
+    def wrap(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/')
+        else:
+            try:
+                user = User.objects.get(username=request.user.username)
+                if not user.is_superuser:
+                    return redirect('/')
+                else:
+
+                    return function(request, *args, **kwargs)
+            except:
+                return redirect('/')
 
     return wrap
