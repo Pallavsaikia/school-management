@@ -12,3 +12,9 @@ class CourseFormUpdate(forms.Form):
     abbreviation = forms.CharField()
     num_div = forms.IntegerField()
     id = forms.IntegerField()
+
+
+class SubjectForm(forms.Form):
+    subject_name = forms.CharField()
+    course = forms.CharField()
+    semester = forms.IntegerField()

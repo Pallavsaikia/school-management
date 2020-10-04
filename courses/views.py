@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from .models import Courses
+from .models import Courses, Subject
 from django.contrib import messages
 from helper.authenticate import authenticate_superuser
-from .forms import CourseForm, CourseFormUpdate
+from .forms import CourseForm, CourseFormUpdate, SubjectForm
 
 
 # Create your views here.
@@ -87,3 +87,63 @@ class SemesterListView(View):
             return render(request, "semesters.html", {'course': course})
         else:
             return redirect('/courses')
+
+
+class SemesterSubjectView(View):
+    @method_decorator(authenticate_superuser)
+    def get(self, request, courseid, semester, subject=None):
+
+        exist, course = Courses.objects.get_or_do_not_exist(courseid)
+        if exist:
+            if int(semester) <= course.max_div:
+                subjects = Subject.objects.all()
+                if subject is None:
+                    return render(request, "subjects.html",
+                                  {'subjects': subjects, 'course': course, 'semester': semester, "edit": False})
+                else:
+                    exist, subject_edit = Subject.objects.get_or_do_not_exist(subject)
+
+                    if exist:
+                        return render(request, "subjects.html",
+                                      {'subject_edit': subject_edit, 'subjects': subjects, 'course': course,
+                                       'semester': semester, "edit": True})
+                    else:
+                        messages.error(request, 'subject id doesnt exist')
+                        return render(request, "subjects.html",
+                                      {'subjects': subjects, 'course': course,
+                                       'semester': semester, "edit": False})
+            else:
+                return redirect('/courses')
+        else:
+            return redirect('/courses')
+
+    @method_decorator(authenticate_superuser)
+    def post(self, request, courseid, semester, subject=None):
+
+        form = SubjectForm(request.POST)
+        if form.is_valid():
+            active = request.POST.get("active", "") == "active"
+            data = form.cleaned_data
+            exist, course = Courses.objects.get_or_do_not_exist(courseid)
+            if exist:
+                if int(semester) <= course.max_div:
+                    if subject is None:
+                        success, string = Subject.objects.new_subject(name=data['subject_name'], course=course
+                                                                      , semester=data['semester'], active=active)
+                    else:
+                        success, string = Subject.objects.update_course(id=subject, name=data['subject_name'],
+                                                                        course=course
+                                                                        , semester=data['semester'], active=active)
+                    if success:
+                        messages.success(request, string)
+                        return redirect(reverse('courses:subject', kwargs={'courseid': courseid, 'semester': semester}))
+                    else:
+                        messages.error(request, string)
+                        return redirect(reverse('courses:subject', kwargs={'courseid': courseid, 'semester': semester}))
+                else:
+                    return redirect('/courses')
+            else:
+                return redirect('/courses')
+        else:
+            messages.error(request, "Invalid form fields")
+            return redirect(reverse('courses:subject', kwargs={'courseid': courseid, 'semester': semester}))

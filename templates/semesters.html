@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% load range %}
 {% block content %}
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -36,11 +38,18 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% times 5 %}
-                                {{ times.iter0 }}
-                                {{ times.iter1 }}
-                                <br/>
-                            {% endtimes %}
+                            {% for value in 0|range:course.max_div %}
+                                <tr>
+                                    <th>{{ course.abbreviation }}</th>
+                                    <th>{{ value|add:"1" }}</th>
+                                    <td>
+                                        <a href="{% url 'courses:subject' courseid=course.pk semester=value|add:1 %}"
+                                           class="text-info">View Subjects</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+
                             </tbody>
                         </table>
                     </div>
