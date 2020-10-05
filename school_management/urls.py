@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^logout/', views.LogoutView.as_view(), name='logout'),
     url(r'dashboard/', views.DashboardView.as_view(), name='dashboard'),
     url(r'^courses/', include(('courses.urls', 'courses'), namespace='courses')),
-    url(r'^teachers/',  views.DashboardView.as_view(), name='teachers'),
+    url(r'^teachers/',  include(('teacher.urls', 'teacher'), namespace='teachers')),
     url(r'^students/',  views.DashboardView.as_view(), name='students'),
 ]
 
