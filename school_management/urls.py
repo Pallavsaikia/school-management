@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'dashboard/', views.DashboardView.as_view(), name='dashboard'),
     url(r'^courses/', include(('courses.urls', 'courses'), namespace='courses')),
     url(r'^teachers/',  include(('teacher.urls', 'teacher'), namespace='teachers')),
-    url(r'^students/',  views.DashboardView.as_view(), name='students'),
+    url(r'^students/',  include(('student.urls', 'student'), namespace='students')),
 ]
 
 if settings.DEBUG:

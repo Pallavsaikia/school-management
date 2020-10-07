@@ -9,23 +9,23 @@
                 <div class="row mb-2">
                     <!-- left col -->
                     <div class="col-sm-12 mb-4">
-                        <h1 class="m-0">Teacher</h1>
+                        <h1 class="m-0">Student</h1>
                     </div>
                     <div class="col-sm-4">
 
 
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">{% if edit %}Edit Teacher{% elif not edit %} Add
-                                    Teacher{% endif %}</h3>
+                                <h3 class="card-title">{% if edit %}Edit Student{% elif not edit %} Add
+                                    Student{% endif %}</h3>
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
                             <form class="form-horizontal" method="post"
-                                  {% if edit %}action="{% url  'teachers:teacher' id=teacher_edit.id %}" {% endif %}>
+                                  {% if edit %}action="{% url  'students:student' id=student_edit.id %}" {% endif %}>
                                 {% csrf_token %}
                                 {% if edit %}
-                                    <input type="hidden" name="id" value="{{ teacher_edit.id }}">
+                                    <input type="hidden" name="id" value="{{ student_edit.id }}">
                                 {% endif %}
                                 <div class="card-body">
                                     <div class="form-group row">
@@ -33,7 +33,7 @@
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" name="first_name"
                                                    placeholder="First Name"{% if edit %}
-                                                   value="{{ teacher_edit.first_name }}"{% endif %}>
+                                                   value="{{ student_edit.first_name }}"{% endif %}>
                                         </div>
                                     </div>
 
@@ -42,7 +42,7 @@
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" name="last_name"
                                                    placeholder="Last Name"{% if edit %}
-                                                   value="{{ teacher_edit.last_name }}"{% endif %}>
+                                                   value="{{ student_edit.last_name }}"{% endif %}>
                                         </div>
                                     </div>
 
@@ -51,7 +51,7 @@
                                         <div class="col-sm-12">
                                             <input type="email" class="form-control" name="email"
                                                    placeholder="Email"{% if edit %}
-                                                   value="{{ teacher_edit.email }}"{% endif %}>
+                                                   value="{{ student_edit.email }}"{% endif %}>
                                         </div>
                                     </div>
 
@@ -63,7 +63,7 @@
                                                 {% for course in courses %}
                                                     <option value="{{ course.id }}"
                                                             {% if edit %}
-                                                                {% if course.id == teacher_edit.course.id %}
+                                                                {% if course.id == student_edit.course.id %}
                                                                     selected
                                                                 {% endif %}
                                                             {% endif %}
@@ -78,7 +78,7 @@
                                         <input type="checkbox" value="active" name="active" class="form-check-input"
                                                id="exampleCheck1"
                                                 {% if edit %}
-                                                    {% if teacher_edit.active %}
+                                                    {% if student_edit.active %}
                                                checked {% endif %}
                                                 {% elif not edit %}
                                                checked
@@ -91,7 +91,7 @@
                                     <button type="submit" class="btn btn-info">{% if edit %}Update{% elif not edit %}
                                         Add{% endif %}</button>
                                     {% if edit %}
-                                        <a href="{% url  'teachers:teacher' %}"
+                                        <a href="{% url  'students:student' %}"
                                            class="btn btn-warning ml-2">Cancel</a>
                                     {% endif %}
                                 </div>
@@ -115,7 +115,7 @@
                     <div class="col-sm-8">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Teachers Added</h3>
+                                <h3 class="card-title">Students Added</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body p-0">
@@ -133,22 +133,22 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for teacher in teachers %}
+                                    {% for student in students %}
                                         <tr>
-                                            <td>{{ teacher.first_name }} {{ teacher.last_name }}</td>
-                                            <td>{% if teacher.user is not None %}
-                                                teacher.user.username
+                                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                            <td>{% if student.user is not None %}
+                                                student.user.username
                                             {% else %}
                                                 --
                                             {% endif %}</td>
-                                            <td>{{ teacher.email }} </td>
-                                            <td>{{ teacher.course.abbreviation }} </td>
+                                            <td>{{ student.email }} </td>
+                                            <td>{{ student.course.abbreviation }} </td>
                                             <td><input type="checkbox"
                                                        disabled="disabled"
-                                                    {% if teacher.active %}
+                                                    {% if student.active %}
                                                        checked{% endif %}>
                                             </td>
-                                            <td><a href="{% url 'teachers:teacher' id=teacher.id %}">edit</a>
+                                            <td><a href="{% url 'students:student' id=student.id %}">edit</a>
                                             </td>
 
 

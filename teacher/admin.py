@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PreRegister
+from .models import UserAbstract
 
 # Register your models here.
-admin.site.register(PreRegister)
+admin.site.register(UserAbstract)
