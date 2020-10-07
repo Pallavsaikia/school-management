@@ -58,10 +58,10 @@
                                     <div class="form-group row">
                                         <div class="col-sm-12">
 
-                                            <select class="form-control">
-                                                <option>--select course</option>
+                                            <select class="form-control" name="course">
+                                                <option value="">--select course</option>
                                                 {% for course in courses %}
-                                                    <option>{{ course.name }}({{ course.abbreviation }})</option>
+                                                    <option value="{{ course.id }}">{{ course.name }}({{ course.abbreviation }})</option>
                                                 {% endfor %}
                                             </select>
 
@@ -71,7 +71,7 @@
                                         <input type="checkbox" value="active" name="active" class="form-check-input"
                                                id="exampleCheck1"
                                                 {% if edit %}
-                                                    {% if subject_edit.active %}
+                                                    {% if teacher_edit.active %}
                                                checked {% endif %}
                                                 {% elif not edit %}
                                                checked
@@ -145,11 +145,5 @@
         </div>
         <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-    <script>
-        document.getElementById('num_div').addEventListener('keyup', function restrictNumber(e) {
-            this.value = this.value.replace(new RegExp(/[^\d]/, 'ig'), "");
-        });
 
-    </script>
 {% endblock %}
