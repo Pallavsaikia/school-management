@@ -38,6 +38,26 @@
                                     </div>
 
                                     <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <select class="form-control" name="teacher">
+                                                <option value="">--select teacher</option>
+                                                {% for teacher in teachers %}
+                                                    <option value="{{ teacher.id }}"
+{#                                                            {% if edit %}#}
+{#                                                                {% if course.id == teacher_edit.course.id %}#}
+{#                                                            selected#}
+{#                                                                {% endif %}#}
+{#                                                            {% endif %}#}
+                                                    >{{ teacher.first_name }} {{ teacher.last_name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
 
                                         <div class="col-sm-12">
                                             <input type="text" class="form-control" name="course_name"
@@ -63,8 +83,8 @@
                                                 {% if edit %}
                                                     {% if subject_edit.active %}
                                                checked {% endif %}
-                                                    {%  elif not edit%}
-                                                    checked
+                                                {% elif not edit %}
+                                               checked
                                                 {% endif %}>
                                         <label class="form-check-label" for="exampleCheck1">Active</label>
                                     </div>

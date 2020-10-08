@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from .models import Courses, Subject
+from .models import Courses
+from subject.models import Subject
 from django.contrib import messages
 from helper.authenticate import authenticate_superuser
 from .forms import CourseForm, CourseFormUpdate, SubjectForm
+from teacher.models import UserAbstract
 
 
 # Create your views here.
@@ -94,23 +96,27 @@ class SemesterSubjectView(View):
     def get(self, request, courseid, semester, subject=None):
 
         exist, course = Courses.objects.get_or_do_not_exist(courseid)
+
         if exist:
+            teacher = UserAbstract.objects.get_teacher_by_department(course)
             if int(semester) <= course.max_div:
                 subjects = Subject.objects.all()
                 if subject is None:
                     return render(request, "subjects.html",
-                                  {'subjects': subjects, 'course': course, 'semester': semester, "edit": False})
+                                  {'subjects': subjects, 'teachers': teacher, 'course': course, 'semester': semester,
+                                   "edit": False})
                 else:
                     exist, subject_edit = Subject.objects.get_or_do_not_exist(subject)
 
                     if exist:
                         return render(request, "subjects.html",
-                                      {'subject_edit': subject_edit, 'subjects': subjects, 'course': course,
+                                      {'subject_edit': subject_edit, 'teachers': teacher, 'subjects': subjects,
+                                       'course': course,
                                        'semester': semester, "edit": True})
                     else:
                         messages.error(request, 'subject id doesnt exist')
                         return render(request, "subjects.html",
-                                      {'subjects': subjects, 'course': course,
+                                      {'subjects': subjects, 'teachers': teacher, 'course': course,
                                        'semester': semester, "edit": False})
             else:
                 return redirect('/courses')
@@ -121,7 +127,8 @@ class SemesterSubjectView(View):
     def post(self, request, courseid, semester, subject=None):
 
         form = SubjectForm(request.POST)
-        if form.is_valid():
+        teacherid = request.POST.get("teacher", "")
+        if form.is_valid() and teacherid != "":
             active = request.POST.get("active", "") == "active"
             data = form.cleaned_data
             exist, course = Courses.objects.get_or_do_not_exist(courseid)

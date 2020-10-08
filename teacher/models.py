@@ -14,6 +14,9 @@ class UserAbstractManager(models.Manager):
     def get_teacher(self):
         return self.get_queryset().filter(is_staff=True)
 
+    def get_teacher_by_department(self, course):
+        return self.get_queryset().filter(is_staff=True).filter(course=course)
+
     def get_student(self):
         return self.get_queryset().filter(is_staff=False)
 
@@ -37,8 +40,7 @@ class UserAbstractManager(models.Manager):
                 return qs, False, self.COURSE_ERROR
             else:
                 return UserAbstract(first_name=first_name, last_name=last_name,
-                                   email=email, course=course, active=active, is_staff=True).save(), True, self.SUCCESS
-
+                                    email=email, course=course, active=active, is_staff=True).save(), True, self.SUCCESS
 
     def new_student(self, first_name, last_name, email, courseid, active):
         qs = self.get_queryset().filter(email=email)
@@ -50,7 +52,8 @@ class UserAbstractManager(models.Manager):
                 return qs, False, self.COURSE_ERROR
             else:
                 return UserAbstract(first_name=first_name, last_name=last_name,
-                                   email=email, course=course, active=active, is_staff=False).save(), True, self.SUCCESS
+                                    email=email, course=course, active=active,
+                                    is_staff=False).save(), True, self.SUCCESS
 
     def update_teacher(self, id_teacher, first_name, last_name, email, courseid, active):
         qs = self.get_queryset().exclude(id=id_teacher).filter(email=email)
@@ -96,7 +99,6 @@ class UserAbstract(models.Model):
     last_name = models.CharField(blank=False, null=False, max_length=30, default='xyz')
     email = models.EmailField(blank=False, null=False, unique=True, default='abc@gmail.com')
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, default=None)
-    semester=models.IntegerField(blank=True, null=True, default='1')
     # phone_number = models.BigIntegerField(blank=False, null=False, default='0', unique=True)
     active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

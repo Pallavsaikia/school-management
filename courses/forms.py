@@ -18,3 +18,4 @@ class SubjectForm(forms.Form):
     subject_name = forms.CharField()
     course = forms.CharField()
     semester = forms.IntegerField()
+
