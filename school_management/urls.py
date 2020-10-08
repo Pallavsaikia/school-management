@@ -21,10 +21,15 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+handler404 = 'school_management.views.handler404'
+handler500 = 'school_management.views.handler500'
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.LoginView.as_view(), name='login'),
     url(r'^logout/', views.LogoutView.as_view(), name='logout'),
+    url(r'^register/', views.RegisterView.as_view(), name='logout'),
     url(r'dashboard/', views.DashboardView.as_view(), name='dashboard'),
     url(r'^courses/', include(('courses.urls', 'courses'), namespace='courses')),
     url(r'^teachers/',  include(('teacher.urls', 'teacher'), namespace='teachers')),
