@@ -10,6 +10,8 @@ class UserAbstractManager(models.Manager):
     COURSE_ERROR = "Course does not exist!"
     SUCCESS = "Successfully added!"
     SUCCESS_UPDATED = "Successfully updated!"
+    USER_REGISTERED = "Email is already Registered"
+    USER_NOT_FOUND = "Email not found"
 
     def get_teacher(self):
         return self.get_queryset().filter(is_staff=True)
@@ -17,9 +19,29 @@ class UserAbstractManager(models.Manager):
     def get_teacher_by_id(self, id_teacher):
         try:
             qs = self.get(id=id_teacher)
-            return True, qs
+            if qs.is_staff and qs.active:
+                return True, qs
+            else:
+                False, None
         except:
             False, None
+
+    def get_teacher_by_email(self, email):
+        qs = self.get_queryset().filter(is_staff=True).filter(active=True).filter(email=email)
+        if qs.count() == 1:
+            return True, qs.first()
+        else:
+            return False, None
+
+    def get_teacher_by_email_for_registration(self, email):
+        exist, qs = self.get_teacher_by_email(email=email)
+        if exist:
+            if qs.registered:
+                return False, self.USER_REGISTERED, None
+            else:
+                return True, self.SUCCESS, qs
+        else:
+            return False, self.USER_NOT_FOUND, None
 
     def get_teacher_by_department(self, course):
         return self.get_queryset().filter(is_staff=True).filter(active=True).filter(course=course)

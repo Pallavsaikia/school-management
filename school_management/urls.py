@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.LoginView.as_view(), name='login'),
     url(r'^logout/', views.LogoutView.as_view(), name='logout'),
-    url(r'^register/', views.RegisterView.as_view(), name='logout'),
+    url(r'^register/', views.RegisterView.as_view(), name='register'),
     url(r'dashboard/', views.DashboardView.as_view(), name='dashboard'),
     url(r'^courses/', include(('courses.urls', 'courses'), namespace='courses')),
     url(r'^teachers/',  include(('teacher.urls', 'teacher'), namespace='teachers')),

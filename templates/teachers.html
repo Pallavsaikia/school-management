@@ -137,7 +137,7 @@
                                         <tr>
                                             <td>{{ teacher.first_name }} {{ teacher.last_name }}</td>
                                             <td>{% if teacher.user is not None %}
-                                                teacher.user.username
+                                               {{ teacher.user.username }}
                                             {% else %}
                                                 --
                                             {% endif %}</td>
