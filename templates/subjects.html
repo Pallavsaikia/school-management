@@ -136,7 +136,11 @@
                                     {% for subject in subjects %}
                                         <tr>
                                             <td>{{ subject.name }}</td>
-                                            <td>{{ subject.teacher.first_name }} {{ subject.teacher.last_name }}</td>
+                                            <td>{% if subject.teacher is not None %}
+                                                {{ subject.teacher.first_name }} {{ subject.teacher.last_name }}
+                                            {% else %}
+                                                --
+                                            {% endif %}</td>
                                             <td><input type="checkbox"
                                                        disabled="disabled"
                                                     {% if subject.active %}
