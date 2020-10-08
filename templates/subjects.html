@@ -44,11 +44,11 @@
                                                 <option value="">--select teacher</option>
                                                 {% for teacher in teachers %}
                                                     <option value="{{ teacher.id }}"
-{#                                                            {% if edit %}#}
-{#                                                                {% if course.id == teacher_edit.course.id %}#}
-{#                                                            selected#}
-{#                                                                {% endif %}#}
-{#                                                            {% endif %}#}
+                                                            {% if edit %}
+                                                                {% if subject_edit.teacher.id == teacher.id %}
+                                                            selected
+                                                                {% endif %}
+                                                            {% endif %}
                                                     >{{ teacher.first_name }} {{ teacher.last_name }}
                                                     </option>
                                                 {% endfor %}
@@ -127,6 +127,7 @@
                                     <tr>
 
                                         <th>Subject name</th>
+                                        <th>Professor name</th>
                                         <th>Active</th>
                                         <th>Edit</th>
                                     </tr>
@@ -135,6 +136,7 @@
                                     {% for subject in subjects %}
                                         <tr>
                                             <td>{{ subject.name }}</td>
+                                            <td>{{ subject.teacher.first_name }} {{ subject.teacher.last_name }}</td>
                                             <td><input type="checkbox"
                                                        disabled="disabled"
                                                     {% if subject.active %}

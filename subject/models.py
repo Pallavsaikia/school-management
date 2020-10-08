@@ -3,6 +3,8 @@ from django.db.models import Q
 from courses.models import Courses
 from teacher.models import UserAbstract
 import traceback
+
+
 # Create your models here.
 class SubjectManager(models.Manager):
     ID_DOES_NOT_EXIST = "Id does not exist"
@@ -25,16 +27,19 @@ class SubjectManager(models.Manager):
         else:
             return False
 
-    def new_subject(self, name, course, semester, active=True):
+    def new_subject(self, name, course, semester, teacher_id=None, active=True):
 
         if self.check_if_exist(name, course, semester):
             return False, self.FIELD_ERROR
         else:
-
-            Subject(name=name, semester=semester, course=course, active=active).save()
+            if teacher_id is not None:
+                exist, teacher = UserAbstract.objects.get_teacher_by_id(teacher_id)
+                Subject(name=name, semester=semester, course=course, active=active, teacher=teacher).save()
+            else:
+                Subject(name=name, semester=semester, course=course, active=active).save()
             return True, self.SUCCESS
 
-    def update_course(self, id, name, course, semester, active=True):
+    def update_subject(self, id, name, course, semester, teacher_id=None, active=True):
         exist, subject = self.get_or_do_not_exist(id)
         if exist:
 
@@ -45,6 +50,11 @@ class SubjectManager(models.Manager):
             else:
                 subject.name = name
                 subject.active = active
+                if teacher_id is not None:
+                    exist, teacher = UserAbstract.objects.get_teacher_by_id(teacher_id)
+                    subject.teacher = teacher
+                else:
+                    subject.teacher = None
                 subject.save()
                 return True, self.SUCCESS
         else:
@@ -57,8 +67,8 @@ class Subject(models.Model):
 
     name = models.CharField(blank=False, null=False, max_length=30)
     semester = models.IntegerField(blank=False, null=False, default='0')
-    course = models.ForeignKey(Courses, on_delete=models.CASCADE,default=1)
-    teacher = models.ForeignKey(UserAbstract, on_delete=models.CASCADE,null=True,blank=True,default=None)
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(UserAbstract, on_delete=models.CASCADE, null=True, blank=True, default=None)
     active = models.BooleanField(default=True)
     objects = SubjectManager()
 

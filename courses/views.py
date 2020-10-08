@@ -128,7 +128,9 @@ class SemesterSubjectView(View):
 
         form = SubjectForm(request.POST)
         teacherid = request.POST.get("teacher", "")
-        if form.is_valid() and teacherid != "":
+        if teacherid == "":
+            teacherid = None
+        if form.is_valid():
             active = request.POST.get("active", "") == "active"
             data = form.cleaned_data
             exist, course = Courses.objects.get_or_do_not_exist(courseid)
@@ -136,11 +138,13 @@ class SemesterSubjectView(View):
                 if int(semester) <= course.max_div:
                     if subject is None:
                         success, string = Subject.objects.new_subject(name=data['subject_name'], course=course
-                                                                      , semester=data['semester'], active=active)
+                                                                      , semester=data['semester'], active=active
+                                                                      , teacher_id=teacherid)
                     else:
-                        success, string = Subject.objects.update_course(id=subject, name=data['subject_name'],
-                                                                        course=course
-                                                                        , semester=data['semester'], active=active)
+                        success, string = Subject.objects.update_subject(id=subject, name=data['subject_name'],
+                                                                         course=course
+                                                                         , semester=data['semester'], active=active,
+                                                                         teacher_id=teacherid)
                     if success:
                         messages.success(request, string)
                         return redirect(reverse('courses:subject', kwargs={'courseid': courseid, 'semester': semester}))

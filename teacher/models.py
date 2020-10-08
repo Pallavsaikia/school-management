@@ -14,8 +14,15 @@ class UserAbstractManager(models.Manager):
     def get_teacher(self):
         return self.get_queryset().filter(is_staff=True)
 
+    def get_teacher_by_id(self, id_teacher):
+        try:
+            qs = self.get(id=id_teacher)
+            return True, qs
+        except:
+            False, None
+
     def get_teacher_by_department(self, course):
-        return self.get_queryset().filter(is_staff=True).filter(course=course)
+        return self.get_queryset().filter(is_staff=True).filter(active=True).filter(course=course)
 
     def get_student(self):
         return self.get_queryset().filter(is_staff=False)
