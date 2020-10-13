@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+    {% load qr_code %}
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -12,6 +13,11 @@
                     <div class="col-sm-6">
 
                     </div><!-- /.col -->
+
+                    <div class="col-sm12">
+                        {% qr_from_text "a@j@^-%)yo!gb!c=j3q8y(u7)u$dmo%*7huk*6w@pzleawdg&-" size="h" %}
+
+                    </div>
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
