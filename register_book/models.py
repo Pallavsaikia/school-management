@@ -19,7 +19,7 @@ class RegisterBookManager(models.Manager):
 
 # Create your models here.
 class RegisterBook(models.Model):
-    professor = models.ForeignKey(UserAbstract, on_delete=models.CASCADE, blank=True, null=True)
+    # professor = models.ForeignKey(UserAbstract, on_delete=models.CASCADE, blank=True, null=True)
     description = models.CharField(blank=True, null=True, max_length=30)
     total_classes = models.IntegerField(blank=False, null=False, default=0)
     active = models.BooleanField(default=True)
