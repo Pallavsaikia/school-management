@@ -141,11 +141,16 @@
                                             {% else %}
                                                 --
                                             {% endif %}</td>
-                                            <td><input type="checkbox"
-                                                       disabled="disabled"
-                                                    {% if subject.active %}
-                                                       checked{% endif %}>
-                                            </td>
+                                            <td>
+{#                                                <input type="checkbox"#}
+{#                                                       disabled="disabled"#}
+{#                                                    {% if subject.active %}#}
+{#                                                       checked{% endif %}>#}
+                                            {% if subject.active %}
+                                                    <span class="fas fa-check " style='color:green'></span>
+                                                {% else %}
+                                                    <span class="fas fa-times " style='color:red'></span>
+                                                {% endif %}</td>
                                             <td>
                                                 <a href="{% url 'courses:subject' courseid=course.id semester=semester subject=subject.id %}">edit</a>
                                             </td>

@@ -143,10 +143,16 @@
                                             {% endif %}</td>
                                             <td>{{ student.email }} </td>
                                             <td>{{ student.course.abbreviation }} </td>
-                                            <td><input type="checkbox"
-                                                       disabled="disabled"
-                                                    {% if student.active %}
-                                                       checked{% endif %}>
+                                            <td>
+{#                                                <input type="checkbox"#}
+{#                                                       disabled="disabled"#}
+{#                                                    {% if student.active %}#}
+{#                                                       checked{% endif %}>#}
+                                                {% if student.active %}
+                                                    <span class="fas fa-check " style='color:green'></span>
+                                                {% else %}
+                                                    <span class="fas fa-times " style='color:red'></span>
+                                                {% endif %}
                                             </td>
                                             <td><a href="{% url 'students:student' id=student.id %}">edit</a>
                                             </td>

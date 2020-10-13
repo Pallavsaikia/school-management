@@ -11,6 +11,17 @@ class SubjectManager(models.Manager):
     SUCCESS = "Successfully updated!"
     FIELD_ERROR = "This course and semester already has the subject"
 
+    def get_by_course_and_semester(self, id_course, semester,active=True):
+        exist, course = Courses.objects.get_or_do_not_exist(id_course)
+        if exist:
+            qs = self.get_queryset().filter(Q(course=course) & Q(semester=semester) & Q(active=active))
+            if qs.count() >= 1:
+                return qs
+            else:
+                return None
+        else:
+            return None
+
     def get_or_do_not_exist(self, id_subject):
         try:
             qs = self.get(id=id_subject)
@@ -74,3 +85,4 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.course.name + str(self.semester) + " " + self.name
+

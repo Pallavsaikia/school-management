@@ -64,7 +64,7 @@
                                                     <option value="{{ course.id }}"
                                                             {% if edit %}
                                                                 {% if course.id == teacher_edit.course.id %}
-                                                                    selected
+                                                            selected
                                                                 {% endif %}
                                                             {% endif %}
                                                     >{{ course.name }}({{ course.abbreviation }})
@@ -137,16 +137,22 @@
                                         <tr>
                                             <td>{{ teacher.first_name }} {{ teacher.last_name }}</td>
                                             <td>{% if teacher.user is not None %}
-                                               {{ teacher.user.username }}
+                                                {{ teacher.user.username }}
                                             {% else %}
                                                 --
                                             {% endif %}</td>
                                             <td>{{ teacher.email }} </td>
                                             <td>{{ teacher.course.abbreviation }} </td>
-                                            <td><input type="checkbox"
-                                                       disabled="disabled"
-                                                    {% if teacher.active %}
-                                                       checked{% endif %}>
+                                            <td>
+                                                {#                                                <input type="checkbox"#}
+                                                {#                                                       disabled="disabled"#}
+                                                {#                                                    {% if teacher.active %}#}
+                                                {#                                                       checked{% endif %}>#}
+                                                {% if teacher.active %}
+                                                    <span class="fas fa-check " style='color:green'></span>
+                                                {% else %}
+                                                    <span class="fas fa-times " style='color:red'></span>
+                                                {% endif %}
                                             </td>
                                             <td><a href="{% url 'teachers:teacher' id=teacher.id %}">edit</a>
                                             </td>
