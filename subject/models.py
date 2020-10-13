@@ -22,6 +22,17 @@ class SubjectManager(models.Manager):
         else:
             return None
 
+    def get_by_course_and_semester_all(self, id_course, semester):
+        exist, course = Courses.objects.get_or_do_not_exist(id_course)
+        if exist:
+            qs = self.get_queryset().filter(Q(course=course) & Q(semester=semester) )
+            if qs.count() >= 1:
+                return qs
+            else:
+                return None
+        else:
+            return None
+
     def get_or_do_not_exist(self, id_subject):
         try:
             qs = self.get(id=id_subject)

@@ -100,7 +100,7 @@ class SemesterSubjectView(View):
         if exist:
             teacher = UserAbstract.objects.get_teacher_by_department(course)
             if int(semester) <= course.max_div:
-                subjects = Subject.objects.all()
+                subjects = Subject.objects.get_by_course_and_semester_all(id_course=courseid,semester=semester)
                 if subject is None:
                     return render(request, "subjects.html",
                                   {'subjects': subjects, 'teachers': teacher, 'course': course, 'semester': semester,
