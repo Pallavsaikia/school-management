@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-from .models import UserAbstract
-
+from .models import RegisterBook
+from .forms import RegisterBookForm
 from courses.models import Courses
 from django.contrib import messages
 from helper.authenticate import authenticate_superuser
@@ -14,42 +14,27 @@ class RegisterBookView(View):
     @method_decorator(authenticate_superuser)
     def get(self, request, id=None):
         courses = Courses.objects.all()
-        teacher = UserAbstract.objects.get_teacher()
-        if id is None:
-            return render(request, "register_book.html", {"edit": False, 'courses': courses, "teachers": teacher})
+        books = RegisterBook.objects.all().order_by('-active','-year','subject__course__abbreviation','subject__semester')
+        if id is not None:
+            RegisterBook.objects.toggle_book(id=id)
+            return redirect('/register-book')
         else:
-            exist, qs = UserAbstract.objects.get_or_do_not_exist(id=id)
+            return render(request, "register_book.html", {"edit": False, 'courses': courses,'books':books})
 
-            if exist:
-
-                return render(request, "teachers.html",
-                              {"edit": True, "teacher_edit": qs, 'courses': courses, "teachers": teacher})
+    @method_decorator(authenticate_superuser)
+    def post(self, request, id=None):
+        form = RegisterBookForm(request.POST)
+        if form.is_valid():
+            active = request.POST.get("active", "") == "active"
+            data = form.cleaned_data
+            success, str = RegisterBook.objects.new_book(subject_id=data["subject"],
+                                                         year=data["year"],
+                                                         active=active)
+            if success:
+                messages.success(request, str)
             else:
-                messages.error(request, 'ID does not exist')
-                return render(request, "teachers.html", {"edit": False, "courses": courses, "teachers": teacher})
-
-    # @method_decorator(authenticate_superuser)
-    # def post(self, request, id=None):
-    #     form = PreRegisterForm(request.POST)
-    #     courseid = request.POST.get("course", "")
-    #     if form.is_valid() and courseid != "":
-    #
-    #         data = form.cleaned_data
-    #         active = request.POST.get("active", "") == "active"
-    #         if id is None:
-    #             qs, success, string = UserAbstract.objects.new_teacher(first_name=data["first_name"],
-    #                                                                   last_name=data["last_name"],
-    #                                                                   email=data["email"], courseid=courseid,
-    #                                                                   active=active)
-    #         else:
-    #             success, string = UserAbstract.objects.update_teacher(id_teacher=id, first_name=data["first_name"],
-    #                                                                  last_name=data["last_name"],
-    #                                                                  email=data["email"], courseid=courseid,
-    #                                                                  active=active)
-    #         if success:
-    #             messages.success(request, string)
-    #         else:
-    #             messages.error(request, string)
-    #     else:
-    #         messages.error(request, "Fields cannot be empty")
-    #     return redirect('/teachers')
+                messages.error(request, str)
+            return redirect('/register-book')
+        else:
+            messages.error(request, "Fields cannot be empty")
+            return redirect('/register-book')
