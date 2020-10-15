@@ -25,6 +25,9 @@ SECRET_KEY = 'a@j@^-%)yo!gb!c=j3q8y(u7)u$dmo%*7huk*6w@pzleawdg&-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# DATE TIME FORMAT
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition

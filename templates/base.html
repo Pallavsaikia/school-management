@@ -155,7 +155,15 @@
                             </ul>
                         </li>
                     {% endif %}
-
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard' %}"
+                           class="nav-link  {% if '/dashboard/'  in  request.path %} active {% endif %}">
+                            <i class="nav-icon fas fa-pen-square"></i>
+                            <p>
+                                Attendance
+                            </p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -186,9 +194,9 @@
 
 <!-- jQuery -->
 <script
-			  src="https://code.jquery.com/jquery-3.5.1.js"
-			  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-			  crossorigin="anonymous"></script>
+        src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+        crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <!-- AdminLTE -->
@@ -201,6 +209,6 @@
 {#<!-- AdminLTE dashboard demo (This is only for demo purposes) -->#}
 {#<script src="{% static 'dist/js/pages/dashboard3.js' %}"></script>#}
 {% block scriptcontent %}
-    {% endblock %}
+{% endblock %}
 </body>
 </html>
