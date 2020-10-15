@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'teacher',
     'student',
     'subject',
+    'attendance',
     'qr_code',
     'ajaxapi',
     'register_book',

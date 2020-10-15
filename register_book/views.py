@@ -16,7 +16,11 @@ class RegisterBookView(View):
         courses = Courses.objects.all()
         books = RegisterBook.objects.all().order_by('-active','-year','subject__course__abbreviation','subject__semester')
         if id is not None:
-            RegisterBook.objects.toggle_book(id=id)
+            success,str=RegisterBook.objects.toggle_book(id=id)
+            if success:
+                messages.success(request,str)
+            else:
+                messages.error(request,str)
             return redirect('/register-book')
         else:
             return render(request, "register_book.html", {"edit": False, 'courses': courses,'books':books})
