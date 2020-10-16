@@ -104,13 +104,13 @@
                                             <td>{{ course.max_div }}</td>
 
                                             <td><a href="{% url "courses:courses" id=course.pk %}" class="fas fa-pen"
-                                                   style='color:skyblue'/></td>
+                                                   style='color:skyblue'></a></td>
                                             </td>
                                             <td><a href="{% url "courses:delete_course" id=course.pk %}"
-                                                   class="fas fa-trash" style='color:red'/></td>
+                                                   class="fas fa-trash" style='color:red'></a></td>
                                             </td>
                                             <td><a href="{% url "courses:view_semester_list" id=course.pk %}"
-                                                   class="fas fa-eye" style='color:green'/></td>
+                                                   class="fas fa-eye" style='color:green'></a></td>
                                         </tr>
                                     {% endfor %}
 

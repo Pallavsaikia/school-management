@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load abs_url %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <!-- left col -->
+
+                    <div class="col-sm-12 mb-4">
+                        <h1 class="m-0">Register Book</h1>
+                    </div>
+                    <div class="col-sm-4">
+
+
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">{% if edit %}Search Book{% elif not edit %} Search
+                                    Book{% endif %}</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form class="form-horizontal" method="POST" id="form-register"
+                                  action="{% url  'attendances:search_book' %}">
+                                {% csrf_token %}
+                                <div class="card-body">
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <select class="form-control" id="courses" name="course">
+                                                <option value="">--select course</option>
+                                                {% for course in courses %}
+                                                    <option value="{{ course.id }}"
+                                                            {% if edit %}
+                                                                {% if course.id == register_book_edit.course.id %}
+                                                            selected
+                                                                {% endif %}
+                                                            {% endif %}
+                                                    >{{ course.name }}({{ course.abbreviation }})
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <select class="form-control" name="semester" id="semester">
+                                                <option value="">--select semester</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <select class="form-control" name="subject" id="subject">
+                                                <option value="">--select subject</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="number" class="form-control" id="year" name="year"
+                                                   placeholder="Year" value="{% now 'Y' %}">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-info">{% if edit %}Search{% elif not edit %}
+                                        Search{% endif %}</button>
+
+                                </div>
+                                <!-- /.card-footer -->
+                            </form>
+                        </div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                    <div class="alert alert-success" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Books Added</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body p-0">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+
+                                        <th>Course</th>
+                                        <th>Semester</th>
+                                        <th>Subject</th>
+                                        <th>Year</th>
+                                        <th>Open</th>
+
+                                        <th>Search</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for book in books %}
+                                        <tr>
+                                            <td>
+                                                {{ book.subject.course.abbreviation }}
+                                            </td>
+                                            <td>
+                                                {{ book.subject.semester }}
+                                            </td>
+                                            <td>
+                                                {{ book.subject.name }}
+                                            </td>
+                                            <td>
+                                                {{ book.year }}
+                                            </td>
+                                            <td>
+                                                {% if book.open %}
+                                                    <span class="fas fa-check " style='color:green'></span>
+                                                {% else %}
+                                                    <span class="fas fa-times " style='color:red'></span>
+                                                {% endif %}
+                                            </td>
+
+                                            <td><a href="{% url 'attendances:view_book' id=book.id %}" class="fas fa-eye" style='color:green'></a></td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+
+
+{% endblock %}
+{% block scriptcontent %}
+    <script>
+        document.getElementById('year').addEventListener('keyup', function restrictNumber(e) {
+            this.value = this.value.replace(new RegExp(/[^\d]/, 'ig'), "");
+        });
+
+        $(document).ready(function () {
+
+            $("#courses").change(function () {
+                $("#semester").html('<option value="">--please wait</option>')
+                $.ajax({
+                    url: "{% abs_url 'ajax_apis:get_semester_list' %}",
+                    method: $("#form-register").attr("method"),
+                    data: $("#form-register").serialize(),
+                    success: function (data) {
+
+
+                        var options = [];
+                        options.push('<option value="">',
+                            "--select semester", '</option>')
+                        for (var i = 1; i < data.semester; i++) {
+                            options.push('<option value="',
+                                i, '">',
+                                i, '</option>');
+                        }
+                        $("#semester").html(options.join(''));
+                    },
+                    error: function (errorData) {
+                        console.log("error")
+                        console.log(errorData)
+                    }
+                })
+            })
+
+
+            $("#semester").change(function () {
+                $("#subject").html('<option value="">--please wait</option>')
+                $.ajax({
+                    url: "{% abs_url 'ajax_apis:get_subject_list' %}",
+                    method: $("#form-register").attr("method"),
+                    data: $("#form-register").serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            var options = [];
+                            options.push('<option value="">',
+                                "--select subject", '</option>')
+                            for (var i = 0; i < data.subjects.length; i++) {
+                                options.push('<option value="',
+                                    data.subjects[i].id, '">',
+                                    data.subjects[i].name, '</option>');
+                            }
+                            $("#subject").html(options.join(''));
+                        } else {
+                            $("#subject").html('<option value="">--no subject</option>')
+                        }
+                    },
+                    error: function (errorData) {
+                        console.log("error")
+                        console.log(errorData)
+                    }
+                })
+            })
+        })
+
+    </script>
+{% endblock %}

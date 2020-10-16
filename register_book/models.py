@@ -18,6 +18,7 @@ def current_year():
 class RegisterBookManager(models.Manager):
     SUBJECT_ERROR = "Subject does not exist"
     BOOK_ERROR = "Book for this year already exist"
+    BOOK_FOUND = "Book Found"
     BOOK_NOT_AVAILABLE = "Book is not available"
     SUCCESSFULLY_ADDED = "Book is Successfully added"
     SUCCESSFULLY_UPDATED = "Book is Successfully Updated"
@@ -56,6 +57,19 @@ class RegisterBookManager(models.Manager):
             print(traceback.print_exc())
             print(traceback.print_exc())
             return False, self.BOOK_NOT_AVAILABLE, None
+
+    def check_book_exist_by_year_subject_return_book(self, subject_id, year):
+
+        exist, subject = Subject.objects.get_or_do_not_exist(id_subject=subject_id)
+
+        if exist:
+            qs = self.get_queryset().filter(subject=subject).filter(year=year)
+            if qs.count() >= 1:
+                return True, self.BOOK_FOUND, qs.first()
+            else:
+                return False, self.BOOK_NOT_AVAILABLE, None
+        else:
+            return True, self.SUBJECT_ERROR, None
 
     def new_book(self, subject_id, year, active=True):
 
