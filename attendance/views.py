@@ -59,7 +59,7 @@ class ViewAttendanceBookView(View):
         exist, book = RegisterBook.objects.get_or_do_not_exist(id_book=id)
         if exist:
             return render(request, "start_attendance.html",
-                          {"edit": False, 'course': book.subject.course.name, 'semester': book.subject.semester,
+                          {"edit": False, 'course': book.subject.course.abbreviation, 'semester': book.subject.semester,
                            'year': book.year,
                            'subject':book.subject.name,
                            'book': book,
