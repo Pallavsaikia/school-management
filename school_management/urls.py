@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^students/',  include(('student.urls', 'student'), namespace='students')),
     url(r'^register-book/',  include(('register_book.urls', 'register_book'), namespace='register_books')),
     url(r'^attendance/',  include(('attendance.urls', 'attendance'), namespace='attendances')),
+    url(r'^api/',  include(('api.urls', 'api'), namespace='apis')),
     url(r'^ajax/',  include(('ajaxapi.urls', 'ajaxapi'), namespace='ajax_apis')),
 ]
 
