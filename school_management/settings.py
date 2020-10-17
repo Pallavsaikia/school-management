@@ -22,6 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'a@j@^-%)yo!gb!c=j3q8y(u7)u$dmo%*7huk*6w@pzleawdg&-'
 
+# JWT TOKEN KEY
+TOKEN_KEY = 'a@j@^-%)yo!gb!c=jasdb562hd8@#@$MA*A@JD@pzleawdg&-'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -31,16 +34,17 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'courses',
     'teacher',
     'student',
     'subject',
     'attendance',
+    'register_book',
     'qr_code',
     'ajaxapi',
-    'register_book',
+    'api',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.TokenVerification',
 ]
 
 ROOT_URLCONF = 'school_management.urls'
