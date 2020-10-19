@@ -8,7 +8,7 @@ class CustomResponse:
     success = ""
     last_page = 0
 
-    def __init__(self, success=True, data=None, error=None, last_page=0):
+    def __init__(self, success=True, data=None, error:dict=None, last_page=0):
         self.data = data
         self.error = error
         self.success = success
