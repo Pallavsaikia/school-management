@@ -29,12 +29,31 @@ class UserAbstractManager(models.Manager):
     def get_teacher_by_email(self, email):
         qs = self.get_queryset().filter(is_staff=True).filter(active=True).filter(email=email)
         if qs.count() == 1:
+
             return True, qs.first()
         else:
             return False, None
 
     def get_teacher_by_email_for_registration(self, email):
         exist, qs = self.get_teacher_by_email(email=email)
+        if exist:
+            if qs.registered:
+                return False, self.USER_REGISTERED, None
+            else:
+                return True, self.SUCCESS, qs
+        else:
+            return False, self.USER_NOT_FOUND, None
+
+
+    def get_student_by_email(self, email):
+        qs = self.get_queryset().filter(is_staff=False).filter(active=True).filter(email=email)
+        if qs.count() == 1:
+            return True, qs.first()
+        else:
+            return False, None
+
+    def get_student_by_email_for_registration(self, email):
+        exist, qs = self.get_student_by_email(email=email)
         if exist:
             if qs.registered:
                 return False, self.USER_REGISTERED, None
@@ -131,6 +150,7 @@ class UserAbstract(models.Model):
     # phone_number = models.BigIntegerField(blank=False, null=False, default='0', unique=True)
     active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    # profile_completed = models.BooleanField(default=False)
     registered = models.BooleanField(default=False)
     objects = UserAbstractManager()
 

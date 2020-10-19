@@ -2,7 +2,7 @@ import jwt
 from school_management.settings import TOKEN_KEY
 
 
-class JwtDecode:
+class Jwt:
     @staticmethod
     def decode(request):
         token = request.META['HTTP_AUTHORIZATION']

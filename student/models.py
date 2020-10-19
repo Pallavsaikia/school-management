@@ -20,4 +20,4 @@ class Student(models.Model):
     objects = StudentManager()
 
     def __str__(self):
-        return self.student
+        return self.student.user.username
