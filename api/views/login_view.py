@@ -20,9 +20,10 @@ class LoginApiView(APIView):
                 response = CustomResponse(success=True, data={"token": token})
                 return Response(response.get_response, status=status.HTTP_200_OK)
             else:
-                error = Error()
-                error.create_or_add_errors(key='Username', errors='username or password does not match')
+                e = Error()
+                e.create_or_add_errors(key='username', errors='username or password does not match')
+                error = e.get_errors
         else:
             error = serializer.errors
-        response = CustomResponse(success=False, error=error.get_errors)
+        response = CustomResponse(success=False, error=error)
         return Response(response.get_response, status=status.HTTP_400_BAD_REQUEST)
