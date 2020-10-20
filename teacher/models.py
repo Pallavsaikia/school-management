@@ -13,6 +13,10 @@ class UserAbstractManager(models.Manager):
     USER_REGISTERED = "Email is already Registered"
     USER_NOT_FOUND = "Email not found"
 
+    def get_student_by_course_semester(self, course:Courses, semester):
+        return self.get_queryset().filter(is_staff=False).filter(registered=True).filter(active=True).filter(
+            course=course).filter(student__semester=semester)
+
     def get_teacher(self):
         return self.get_queryset().filter(is_staff=True)
 
@@ -43,7 +47,6 @@ class UserAbstractManager(models.Manager):
                 return True, self.SUCCESS, qs
         else:
             return False, self.USER_NOT_FOUND, None
-
 
     def get_student_by_email(self, email):
         qs = self.get_queryset().filter(is_staff=False).filter(active=True).filter(email=email)

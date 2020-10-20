@@ -33,7 +33,7 @@ class RegisterSerializers(serializers.Serializer):
                     user_abs.user = user
                     new_user = user_abs.save()
                     # adding student to Student Table
-                    Student(student=new_user, year=year).save()
+                    Student(student=user_abs, year=year).save()
                 else:
                     error = error_response(error={'username': ['username already exist']})
                     raise serializers.ValidationError(error.get_response)

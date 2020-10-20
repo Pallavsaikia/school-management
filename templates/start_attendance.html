@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+{% block csscontent %}
+    <link rel="stylesheet" href="{% static 'datetimepicker/dist/css/bootstrap-datepicker3.min.css' %}">
+{% endblock %}
+
 {% block content %}
     {% load abs_url %}
     <!-- Content Wrapper. Contains page content -->
@@ -13,7 +18,19 @@
                         <h1 class="m-0">Start Attendance for {{ course }}-{{ semester }} {{ subject }}/{{ year }}</h1>
                     </div>
                     <div class="col-sm-4">
-
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                    <div class="alert alert-success" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
 
                         <div class="card card-info">
                             <div class="card-header">
@@ -23,8 +40,10 @@
                             <!-- /.card-header -->
                             <!-- form start -->
                             <form class="form-horizontal" method="POST" id="form-register"
-                                  action="{% url  'attendances:search_book' %}">
+                                  action="{% url  'attendances:start_attendance' %}">
                                 {% csrf_token %}
+
+                                <input type="hidden" name="book_id" value="{{ book.id }}">
                                 <div class="card-body">
 
                                     <div class="form-group row">
@@ -69,7 +88,20 @@
                                     <div class="form-group row">
                                         <div class="col-sm-12">
                                             <input type="number" class="form-control" id="half" name="half"
-                                                   placeholder=Half" value="1">
+                                                   placeholder=Half" value="{{ half }}">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="input-group date" id="attendanceDate" data-target-input="nearest">
+                                            <input name="attendance_date" type="text" class="form-control datepicker"
+                                                   data-date-format="mm/dd/yyyy" placeholder="DD/MM/YYYY"
+                                                   value="{% now 'd / M / Y' %}">
+                                            <div class="input-group-append" data-target="#attendanceDate"
+                                                 data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -89,19 +121,7 @@
                                 <!-- /.card-footer -->
                             </form>
                         </div>
-                        {% if messages %}
-                            {% for message in messages %}
-                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ message }}
-                                    </div>
-                                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                                    <div class="alert alert-success" role="alert">
-                                        {{ message }}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
+
                     </div>
                     <div class="col-sm-8">
                         <div class="card">
@@ -176,3 +196,11 @@
 
 {% endblock %}
 
+{% block scriptcontent %}
+    <script src="{% static 'datetimepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#attendanceDate input').datepicker({format: 'dd / M / yyyy',});
+        })
+    </script>
+{% endblock %}

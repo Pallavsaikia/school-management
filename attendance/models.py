@@ -2,10 +2,54 @@ from django.db import models
 from register_book.models import RegisterBook
 from teacher.models import UserAbstract
 import datetime
+from django.db.models import Max
 
 
 class AttendanceManager(models.Manager):
-    pass
+    NO_STUDENT = "No student in this course and semester"
+    HALF_ERROR = "Attendance already taken for this half"
+    SUCCESS = "Attendance Started"
+
+    def get_half(self, book, date_attendance):
+        qs = Attendance.objects.filter(date_attendance=date_attendance).filter(register_book=book).aggregate(
+            Max('half'))
+        count = qs['half__max']
+        if count is None:
+            count = 0
+        return count
+
+    def bulk_insert(self, book_id, half, date_attendance):
+        exist, book = RegisterBook.objects.get_or_do_not_exist(id_book=book_id)
+        if exist:
+            # book exist
+            half_last = self.get_half(book=book, date_attendance=date_attendance)
+            if half_last < half:
+                student_list = UserAbstract.objects.get_student_by_course_semester(course=book.subject.course,
+                                                                                   semester=book.subject.semester)
+                if student_list is not None:
+                    # has student
+                    print(str(student_list.count()))
+                    if student_list.count() > 1:
+                        RegisterBook.objects.toggle_book_for_attendance(on=True, book=book)
+                        # does not have student
+                        for student in student_list:
+                            Attendance(register_book=book, student=student, half=half,
+                                       date_attendance=date_attendance).save()
+
+                        return True, self.SUCCESS
+                    else:
+                        return False, self.NO_STUDENT
+
+
+                else:
+                    # does not have student
+                    return False, self.NO_STUDENT
+            else:
+                # half error
+                return False, self.HALF_ERROR
+        else:
+            # book does not exist
+            return False, RegisterBook.objects.BOOK_NOT_AVAILABLE
 
 
 class Attendance(models.Model):

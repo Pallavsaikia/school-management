@@ -40,6 +40,17 @@ class RegisterBookManager(models.Manager):
         else:
             return False, self.BOOK_NOT_AVAILABLE
 
+    def toggle_book_for_attendance(self, on, id: int = None, book=None):
+        exist = True
+        if book is None:
+            exist, book = self.get_or_do_not_exist(id_book=id)
+        if exist:
+            book.open = on
+            book.save()
+            return True, self.SUCCESSFULLY_UPDATED
+        else:
+            return False, self.BOOK_NOT_AVAILABLE
+
     def check_book_exist_by_year_subject(self, subject_id, year):
         try:
             exist, subject = Subject.objects.get_or_do_not_exist(id_subject=subject_id)
