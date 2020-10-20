@@ -30,7 +30,9 @@ class AttendanceManager(models.Manager):
                     # has student
                     print(str(student_list.count()))
                     if student_list.count() > 1:
-                        RegisterBook.objects.toggle_book_for_attendance(on=True, book=book)
+                        book.open = True
+                        book.total_classes=book.total_classes+1
+                        book.save()
                         # does not have student
                         for student in student_list:
                             Attendance(register_book=book, student=student, half=half,

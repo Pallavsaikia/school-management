@@ -29,7 +29,7 @@ TOKEN_KEY = 'a@j@^-%)yo!gb!c=jasdb562hd8@#@$MA*A@JD@pzleawdg&-'
 DEBUG = True
 
 # DATE TIME FORMAT
-DATE_INPUT_FORMATS = ['d / M / Y']
+DATE_INPUT_FORMATS = ['%d / %b / %Y',]
 
 ALLOWED_HOSTS = ['*']
 
