@@ -31,7 +31,7 @@ class AttendanceManager(models.Manager):
                     print(str(student_list.count()))
                     if student_list.count() > 1:
                         book.open = True
-                        book.total_classes=book.total_classes+1
+                        book.total_classes = book.total_classes + 1
                         book.save()
                         # does not have student
                         for student in student_list:
