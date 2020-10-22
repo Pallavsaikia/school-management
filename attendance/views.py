@@ -9,7 +9,8 @@ from helper.authenticate import authenticate_superuser
 import datetime
 from .models import Attendance
 from .forms import AttendanceForm
-
+from helper.qr import QrCode
+from helper.urlbuilder import build_url
 
 # Create your views here.
 
@@ -66,7 +67,7 @@ class ViewAttendanceBookView(View):
                            'year': book.year,
                            'subject': book.subject.name,
                            'book': book,
-                           'half':half,
+                           'half': half,
                            'books': books})
         else:
             messages.error(request, "Book Does not exist")
@@ -80,14 +81,25 @@ class StartAttendance(View):
         if form.is_valid():
             data = form.cleaned_data
             book_id = data["book_id"]
+            half = data["half"]
+            date = data["attendance_date"]
             success, string = Attendance.objects.bulk_insert(book_id=book_id, half=data["half"],
                                                              date_attendance=data["attendance_date"])
             if success:
-                messages.success(request, string)
-                return redirect(reverse('attendances:view_book', kwargs={'id': book_id}))
+                qr_str = QrCode.encode(book_id=book_id, date=date, half=half).decode("utf-8")
+                url = build_url('attendances:qr_code_scanner', get={'qr_code': qr_str})
+                return redirect(url)
             else:
                 messages.error(request, string)
                 return redirect(reverse('attendances:view_book', kwargs={'id': book_id}))
         else:
             messages.error(request, "Field error")
             return redirect(reverse('attendances:view_book', kwargs={'id': request.POST["book_id"]}))
+
+
+class QRcodeView(View):
+    @method_decorator(authenticate_superuser)
+    def get(self, request):
+        qr_code = request.GET["qr_code"]
+        return render(request, "qr_code.html",
+                      {"qr": qr_code})

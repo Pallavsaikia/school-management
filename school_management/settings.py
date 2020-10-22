@@ -25,6 +25,10 @@ SECRET_KEY = 'a@j@^-%)yo!gb!c=j3q8y(u7)u$dmo%*7huk*6w@pzleawdg&-'
 # JWT TOKEN KEY
 TOKEN_KEY = 'a@j@^-%)yo!gb!c=jasdb562hd8@#@$MA*A@JD@pzleawdg&-'
 
+
+# JWT TOKEN KEY
+QR_KEY = 'eJ#)$(JMF(#!@$S#So!gb!c=jasdb562hd8@#+_(F*#fds43nch#5'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
