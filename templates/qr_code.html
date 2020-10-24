@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+{% block csscontent %}
+
+    <link rel="stylesheet" href="{% static 'photoviewer-master/dist/photoviewer.min.css' %}"/>
+{% endblock %}
 {% block content %}
     {% load qr_code %}
     <!-- Content Wrapper. Contains page content -->
@@ -14,8 +19,10 @@
 
                     </div><!-- /.col -->
 
-                    <div class="col-sm-6">
-                        {% qr_from_text qr size="t" image_format="png" %}
+                    <div class="col-sm-6" id="qr-div">
+                        <a href="#">
+                            {% qr_from_text qr size="t" image_format="png" %}
+                        </a>
 
                     </div>
                     <div class="col-sm-6">
@@ -37,4 +44,31 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+{% endblock %}
+
+
+{% block scriptcontent %}
+    <script src="{% static 'photoviewer-master/dist/photoviewer.min.js' %}"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#qr-div a').click(function (e) {
+                e.preventDefault();
+                var items = [],
+                    options = {
+                        draggable: true,
+                    };
+
+
+                let src = $('#qr-div img').attr('src');
+                console.log(src)
+                items.push({
+                    src: src
+                });
+
+
+                new PhotoViewer(items, options);
+            });
+        })
+    </script>
 {% endblock %}
