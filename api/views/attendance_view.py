@@ -1,4 +1,4 @@
-from helper.custom_response import CustomResponse
+from helper.custom_response import CustomResponse,missing_field_error_response,success_response
 from rest_framework.response import Response
 from rest_framework import status
 from api.serializers.mark_attendance_serializer import MarkAttendanceSerializers
@@ -12,9 +12,8 @@ class MarkAttendance(AuthenticatedApiView):
         serializer = MarkAttendanceSerializers(data=request.data)
         if serializer.is_valid():
             serializer.save(user)
-            qr_code = serializer.data['qr_code']
             token = Jwt.encode(username=user.username)
-            response = CustomResponse(success=False, error=serializer.errors)
+            response = success_response()
             return Response(response.get_response, status=status.HTTP_200_OK)
-        response = CustomResponse(success=False, error=serializer.errors)
-        return Response(response.get_response, status=status.HTTP_400_BAD_REQUEST)
+        response = missing_field_error_response(error=serializer.errors)
+        return Response(response.get_response, status=status.HTTP_200_OK)

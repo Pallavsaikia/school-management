@@ -10,12 +10,15 @@ class CustomResponse:
     success = ""
     last_page = 0
     error_code = status_codes.NO_ERROR
+    msg:str = None
 
-    def __init__(self, success=True, data=None, error: dict = None, error_code=status_codes.NO_ERROR, last_page=0):
+    def __init__(self, success=True, data=None, error: dict = None, msg:str=None, error_code=status_codes.NO_ERROR,
+                 last_page=0):
         self.data = data
         self.error = error
         self.error_code = error_code
         self.success = success
+        self.msg = msg
         self.last_page = last_page
 
     @property
@@ -25,7 +28,8 @@ class CustomResponse:
                 'success': self.success,
                 'error_code': self.error_code,
                 'error': self.error,
-                'data': self.data
+                'data': self.data,
+                'msg':self.msg
             }
         else:
             return {
@@ -33,12 +37,13 @@ class CustomResponse:
                 'error_code': self.error_code,
                 'error': self.error,
                 'data': self.data,
-                'last_page': self.last_page
+                'last_page': self.last_page,
+                'msg': self.msg
             }
 
 
-def success_response(data: dict):
-    return CustomResponse(success=True, data=data)
+def success_response(data: dict=None, msg="Success"):
+    return CustomResponse(success=True, data=data, msg=msg)
 
 
 def missing_field_error_response(error: dict):
