@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from helper.custom_response import CustomResponse
+from helper.custom_response import CustomResponse, missing_field_error_response, authentication_error_response
 from rest_framework.response import Response
 from rest_framework import status
 from api.serializers.login_serializer import LoginSerializer
@@ -23,7 +23,8 @@ class LoginApiView(APIView):
                 e = Error()
                 e.create_or_add_errors(key='username', errors='username or password does not match')
                 error = e.get_errors
+                response = authentication_error_response(error=error)
         else:
             error = serializer.errors
-        response = CustomResponse(success=False, error=error)
+            response = missing_field_error_response(error=error)
         return Response(response.get_response, status=status.HTTP_200_OK)

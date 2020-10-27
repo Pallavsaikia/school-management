@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.serializers.registration_serializer import RegisterSerializers
 from helper.custom_jwt import Jwt
-
+from helper.custom_response import authentication_error_response,missing_field_error_response
 
 class RegisterApiView(APIView):
     def post(self, request):
@@ -15,5 +15,5 @@ class RegisterApiView(APIView):
             token = Jwt.encode(username=username)
             response = CustomResponse(success=True, data={"token": token})
             return Response(response.get_response, status=status.HTTP_200_OK)
-        response = CustomResponse(success=False, error=serializer.errors)
+        response = missing_field_error_response(error=serializer.errors)
         return Response(response.get_response, status=status.HTTP_200_OK)

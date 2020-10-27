@@ -16,6 +16,15 @@ class Error:
     def get_errors(self):
         return self.error
 
+    @property
+    def get_errors_dict(self):
+        return {
+            'error': self.error,
+        }
+
+
+
+
 
 
 
