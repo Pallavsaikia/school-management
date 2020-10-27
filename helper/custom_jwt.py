@@ -1,5 +1,5 @@
 import jwt
-from school_management.settings import TOKEN_KEY
+from school_management.settings import TOKEN_KEY, QR_KEY
 
 
 class Jwt:
@@ -7,6 +7,10 @@ class Jwt:
     def decode(request):
         token = request.META['HTTP_AUTHORIZATION']
         return jwt.decode(token, TOKEN_KEY, algorithms=["HS256"])
+
+    @staticmethod
+    def decode_qr(string):
+        return jwt.decode(string, QR_KEY, algorithms=["HS256"])
 
     @staticmethod
     def encode(username):

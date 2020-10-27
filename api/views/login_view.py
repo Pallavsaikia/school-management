@@ -26,4 +26,4 @@ class LoginApiView(APIView):
         else:
             error = serializer.errors
         response = CustomResponse(success=False, error=error)
-        return Response(response.get_response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(response.get_response, status=status.HTTP_200_OK)

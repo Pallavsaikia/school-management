@@ -13,7 +13,7 @@ class RegisterApiView(APIView):
             serializer.save()
             username = serializer.data['username']
             token = Jwt.encode(username=username)
-            response = CustomResponse(success=True,data={"token":token})
+            response = CustomResponse(success=True, data={"token": token})
             return Response(response.get_response, status=status.HTTP_200_OK)
         response = CustomResponse(success=False, error=serializer.errors)
-        return Response(response.get_response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(response.get_response, status=status.HTTP_200_OK)
