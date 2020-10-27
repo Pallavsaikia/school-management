@@ -37,6 +37,10 @@ class CustomResponse:
             }
 
 
+def success_response(data: dict):
+    return CustomResponse(success=True, data=data)
+
+
 def missing_field_error_response(error: dict):
     return CustomResponse(success=False, error=error, error_code=status_codes.FIELDS_MISSING_OR_INVALID)
 

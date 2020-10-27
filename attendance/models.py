@@ -14,8 +14,12 @@ class AttendanceManager(models.Manager):
         qs = Attendance.objects.filter(date_attendance=date_attendance).filter(register_book=register_book).filter(
             student=student).filter(half=half)
         if qs is not None:
-            return True, qs
+            if qs.count() > 0:
+                return True, qs.first()
+            else:
+                return False, None
         else:
+
             return False, None
 
     def get_half(self, book, date_attendance):

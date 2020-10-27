@@ -1,5 +1,8 @@
 from rest_framework.views import APIView
-from helper.custom_response import CustomResponse, missing_field_error_response, authentication_error_response
+from helper.custom_response import (CustomResponse,
+                                    missing_field_error_response,
+                                    authentication_error_response,
+                                    success_response)
 from rest_framework.response import Response
 from rest_framework import status
 from api.serializers.login_serializer import LoginSerializer
@@ -17,7 +20,7 @@ class LoginApiView(APIView):
             user = auth.authenticate(username=username, password=password)
             if user is not None and not user.is_staff and not user.is_superuser:
                 token = Jwt.encode(username=username)
-                response = CustomResponse(success=True, data={"token": token})
+                response = success_response(data={"token": token})
                 return Response(response.get_response, status=status.HTTP_200_OK)
             else:
                 e = Error()
