@@ -7,8 +7,15 @@ from helper.custom_jwt import Jwt
 
 
 class MarkAttendanceSerializers(serializers.Serializer):
-    qr_scan = serializers.CharField(required=True)
+    QR_ERROR = {'qr_code': "Invalid QR CODE"}
+    qr_code = serializers.CharField(required=True)
 
-    def save(self, request):
-        qr_scan = self.validated_data['qr_scan']
-        Jwt.decode_qr(qr_scan)
+    def save(self):
+        qr_scan = self.validated_data['qr_code']
+
+        try:
+            decode = Jwt.decode_qr(qr_scan)
+
+        except:
+            error = error_response(error=self.QR_ERROR)
+            raise serializers.ValidationError(error.get_response)

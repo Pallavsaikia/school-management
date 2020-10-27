@@ -11,8 +11,8 @@ class MarkAttendance(AuthenticatedApiView):
     def post(self, request, user):
         serializer = MarkAttendanceSerializers(data=request.data)
         if serializer.is_valid():
-            # serializer.save()
-            qr_code = serializer.data['qr_scan']
+            serializer.save()
+            qr_code = serializer.data['qr_code']
             token = Jwt.encode(username=user.username)
             response = CustomResponse(success=True, data={"token": token})
             return Response(response.get_response, status=status.HTTP_200_OK)
