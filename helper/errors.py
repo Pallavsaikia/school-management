@@ -1,5 +1,4 @@
-from json import JSONEncoder
-import json
+
 
 
 class Error:
@@ -15,9 +14,9 @@ class Error:
 
     @property
     def get_errors(self):
-        return {
-            'error': self.error,
-        }
+        return self.error
+
+
 
 
 

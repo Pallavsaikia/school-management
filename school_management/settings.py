@@ -34,6 +34,7 @@ DEBUG = True
 
 # DATE TIME FORMAT
 DATE_INPUT_FORMATS = ['%d / %b / %Y',]
+DATE_INPUT_FORMATS_STR = "%d / %b / %Y"
 
 ALLOWED_HOSTS = ['*']
 
@@ -144,6 +145,11 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn", "static_root")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static_cdn", "media_root")
+
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'helper.exception.custom_exception_handler'
+}
 
 """
     for caching

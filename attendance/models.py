@@ -10,6 +10,14 @@ class AttendanceManager(models.Manager):
     HALF_ERROR = "Attendance already taken for this half"
     SUCCESS = "Attendance Started"
 
+    def get_attendance_row_for_update(self, register_book: RegisterBook, student: UserAbstract, date_attendance, half):
+        qs = Attendance.objects.filter(date_attendance=date_attendance).filter(register_book=register_book).filter(
+            student=student).filter(half=half)
+        if qs is not None:
+            return True, qs
+        else:
+            return False, None
+
     def get_half(self, book, date_attendance):
         qs = Attendance.objects.filter(date_attendance=date_attendance).filter(register_book=book).aggregate(
             Max('half'))

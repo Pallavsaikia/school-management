@@ -1,8 +1,11 @@
 from rest_framework import serializers
-from helper.validation_error_response import  error_response
+from helper.validation_error_response import error_response
 from django.contrib.auth.models import User
 from teacher.models import UserAbstract
 from student.models import Student
+from helper.exception import CustomValidation
+from helper.errors import Error
+from helper.quick_errors import raise_field_error, raise_missing_field_error
 
 
 class RegisterSerializers(serializers.Serializer):
@@ -35,11 +38,8 @@ class RegisterSerializers(serializers.Serializer):
                     # adding student to Student Table
                     Student(student=user_abs, year=year).save()
                 else:
-                    error = error_response(error={'username': ['username already exist']})
-                    raise serializers.ValidationError(error.get_response)
+                    raise_field_error(key='username', details='username already exist')
             else:
-                error = error_response(error={'email': [string]})
-                raise serializers.ValidationError(error.get_response)
+                raise_field_error(key='email', details=string)
         else:
-            error = error_response(error={'password': ['Password cannot be empty']})
-            raise serializers.ValidationError(error.get_response)
+            raise_missing_field_error(key='password', details='Password cannot be empty')

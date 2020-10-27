@@ -11,10 +11,10 @@ class MarkAttendance(AuthenticatedApiView):
     def post(self, request, user):
         serializer = MarkAttendanceSerializers(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user)
             qr_code = serializer.data['qr_code']
             token = Jwt.encode(username=user.username)
-            response = CustomResponse(success=True, data={"token": token})
+            response = CustomResponse(success=False, error=serializer.errors)
             return Response(response.get_response, status=status.HTTP_200_OK)
         response = CustomResponse(success=False, error=serializer.errors)
         return Response(response.get_response, status=status.HTTP_400_BAD_REQUEST)
