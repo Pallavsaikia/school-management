@@ -16,5 +16,5 @@ class RegisterApiView(APIView):
             token = Jwt.encode(username=username)
             response = success_response(data={"token": token})
             return Response(response.get_response, status=status.HTTP_200_OK)
-        response = missing_field_error_response(error=serializer.errors)
+        response = missing_field_error_response(error=serializer.errors,error_message=str(serializer.errors))
         return Response(response.get_response, status=status.HTTP_200_OK)

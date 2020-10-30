@@ -26,7 +26,7 @@ class LoginApiView(APIView):
                 e = Error()
                 e.create_or_add_errors(key='username', errors='username or password does not match')
                 error = e.get_errors
-                response = authentication_error_response(error=error)
+                response = authentication_error_response(error=error,error_message="username or password does not match")
         else:
             error = serializer.errors
             response = missing_field_error_response(error=error)

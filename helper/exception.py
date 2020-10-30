@@ -12,7 +12,8 @@ class CustomValidation(APIException):
     error_code = status_codes.INTERNAL_SERVER_ERROR
     error = {}
 
-    def __init__(self, detail=None, field=None, error: Error = None, error_code=status_codes.INTERNAL_SERVER_ERROR,
+    def __init__(self, detail=None, field=None, error: Error = None, error_msg: str = "Something went wrong",
+                 error_code=status_codes.INTERNAL_SERVER_ERROR,
                  status_code=status.HTTP_200_OK):
         # if status_code is not None: self.status_code = status_code
         self.error_code = error_code
@@ -37,5 +38,6 @@ def custom_exception_handler(exc, context):
         # response.data['error'] = exc.get_error
         # print(type(exc))
         response.data['error'] = exc.error
+        response.data['error_msg'] = exc.error_msg
 
     return response

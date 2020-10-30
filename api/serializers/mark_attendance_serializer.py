@@ -33,11 +33,11 @@ class MarkAttendanceSerializers(serializers.Serializer):
                         attendance.updated_at = datetime.now()
                         attendance.save()
                     else:
-                        raise_internal_server_error(key="Attendance", details=self.NO_ENTRY_FOR_ATTENDANCE_EXIST)
+                        raise_internal_server_error(key="Attendance", error_message=self.NO_ENTRY_FOR_ATTENDANCE_EXIST)
 
                 else:
-                    raise_field_error(key="Book", details=self.BOOK_CLOSE_ERROR)
+                    raise_field_error(key="Book", error_message=self.BOOK_CLOSE_ERROR)
             else:
-                raise_field_error(key="Book", details=self.BOOK_DOES_NOT_EXIST)
+                raise_field_error(key="Book", error_message=self.BOOK_DOES_NOT_EXIST)
         else:
-            raise_field_error(key="Book", details=self.QR_ERROR)
+            raise_field_error(key="Book", error_message=self.QR_ERROR)
