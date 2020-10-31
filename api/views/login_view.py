@@ -1,13 +1,13 @@
-from rest_framework.views import APIView
-from helper.custom_response import (CustomResponse,
-                                    missing_field_error_response,
-                                    authentication_error_response,
-                                    success_response)
-from rest_framework.response import Response
+from django.contrib.auth.models import auth
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from api.serializers.login_serializer import LoginSerializer
 from helper.custom_jwt import Jwt
-from django.contrib.auth.models import auth
+from helper.custom_response import (missing_field_error_response,
+                                    authentication_error_response,
+                                    success_response)
 from helper.errors import Error
 
 
@@ -20,7 +20,11 @@ class LoginApiView(APIView):
             user = auth.authenticate(username=username, password=password)
             if user is not None and not user.is_staff and not user.is_superuser:
                 token = Jwt.encode(username=username)
-                response = success_response(data={"token": token})
+                response = success_response(data={"token": token,
+                                                  "username": username,
+                                                  "first_name": user.userabstract.first_name,
+                                                  "last_name": user.userabstract.last_name,
+                                                  "email": user.userabstract.email})
                 return Response(response.get_response, status=status.HTTP_200_OK)
             else:
                 e = Error()
