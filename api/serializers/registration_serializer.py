@@ -38,8 +38,10 @@ class RegisterSerializers(serializers.Serializer):
                     # adding student to Student Table
                     Student(student=user_abs, year=year).save()
                 else:
-                    raise_field_error(key='username', error_message='username already exist')
+                    raise_field_error(key='username', details='username already exist',
+                                      error_message='username already exist')
             else:
-                raise_field_error(key='email', error_message=string)
+                raise_field_error(key='email', details=string, error_message=string)
         else:
-            raise_missing_field_error(key='password', error_message='Password cannot be empty')
+            raise_missing_field_error(key='password', details='Password cannot be empty',
+                                      error_message='Password cannot be empty')
