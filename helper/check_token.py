@@ -10,7 +10,8 @@ def check_token(function):
         if not request.valid_token:
             return JsonResponse({"success": False,
                                  "error": {"token": ["invalid token"]},
-                                 "error_code":status_codes.INVALID_TOKEN})
+                                 "error_code": status_codes.INVALID_TOKEN,
+                                 "error_message": "Invalid Token"})
         else:
             username = request.token_decode.get("username")
             user = User.objects.get(username=username)
@@ -20,6 +21,7 @@ def check_token(function):
             else:
                 return JsonResponse({"success": False,
                                      "error": {"token": ["invalid token"]},
-                                     "error_code": status_codes.INVALID_TOKEN})
+                                     "error_code": status_codes.INVALID_TOKEN,
+                                     "error_message": "Invalid Token"})
 
     return wrap
