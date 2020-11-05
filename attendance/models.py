@@ -30,6 +30,13 @@ class AttendanceManager(models.Manager):
             count = 0
         return count
 
+    def check_entry_exist_for_date_half_book(self, book, date_attendance, half):
+        qs = Attendance.objects.filter(date_attendance=date_attendance).filter(register_book=book).filter(half=half)
+        if qs.count() > 0:
+            return True, qs
+        else:
+            return False, qs
+
     def bulk_insert(self, book_id, half, date_attendance):
         exist, book = RegisterBook.objects.get_or_do_not_exist(id_book=book_id)
         if exist:

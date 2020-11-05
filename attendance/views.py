@@ -9,8 +9,9 @@ from helper.authenticate import authenticate_superuser
 import datetime
 from .models import Attendance
 from .forms import AttendanceForm
-from helper.qr import QrCode
+from helper.qr import QrCode, QrData
 from helper.urlbuilder import build_url
+
 
 # Create your views here.
 
@@ -101,5 +102,35 @@ class QRcodeView(View):
     @method_decorator(authenticate_superuser)
     def get(self, request):
         qr_code = request.GET["qr_code"]
-        return render(request, "qr_code.html",
-                      {"qr": qr_code})
+        success, dict = QrCode.decode(qr_code)
+        if success:
+            qr_data = QrData(dict)
+            exist, book = RegisterBook.objects.get_or_do_not_exist(qr_data.book_id)
+            valid, date = qr_data.get_processed_date()
+            if exist and valid:
+
+                attendance_exist = Attendance.objects.check_entry_exist_for_date_half_book(book=book,
+                                                                                           date_attendance=date,
+                                                                                           half=qr_data.half)
+
+                subject = book.subject.name
+                course = book.subject.course.abbreviation
+                semester = book.subject.semester
+                year = book.year
+                if attendance_exist:
+                    return render(request, "qr_code.html",
+                                  {"qr": qr_code, "valid": True,
+                                   "subject": subject,
+                                   "course": course,
+                                   "semester": semester,
+                                   "year": year})
+                else:
+                    return render(request, "qr_code.html",
+                                  {"qr": qr_code, "valid": False})
+            else:
+                return render(request, "qr_code.html",
+                              {"qr": qr_code, "valid": False})
+
+        else:
+            return render(request, "qr_code.html",
+                          {"qr": qr_code, "valid": False})

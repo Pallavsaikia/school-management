@@ -20,9 +20,9 @@ class MarkAttendanceSerializers(serializers.Serializer):
         success, decode = QrCode.decode(qr_scan)
         if success:
             qr = QrData(decode)
-            date = qr.get_processed_date()
+            valid, date = qr.get_processed_date()
             exist, book = RegisterBook.objects.get_or_do_not_exist(id_book=qr.book_id)
-            if exist:
+            if exist and valid:
                 if book.open:
                     exist, attendance = Attendance.objects.get_attendance_row_for_update(register_book=book,
                                                                                          half=qr.half,

@@ -29,4 +29,10 @@ class QrData:
         self.half = qr.get("half")
 
     def get_processed_date(self):
-        return string_to_date(self.date)
+        try:
+            return True, string_to_date(self.date)
+        except:
+            return False, None
+
+    def __str__(self):
+        return str(self.date) + " " + str(self.book_id) + " " + str(self.half)
